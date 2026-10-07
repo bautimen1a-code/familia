@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="theme-color" content="#fff8f0" />
+<link rel="manifest" href="/manifest.json" />
 <title>🏠 Nuestra Familia</title>
 <style>
 :root {
@@ -91,11 +92,14 @@ input, textarea { font-family: inherit; }
 .btn-hoy-flotante.visible { display: inline-block; }
 @keyframes latidoHoy { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
 
+/* =========================================================
+   PROGRESO + BOTÓN "TODOS" PEQUEÑO AL LADO
+   ========================================================= */
 .progreso { margin: 18px auto 0; max-width: 480px; padding: 0 18px; }
 .progreso-caja {
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  border-radius: var(--radius); padding: 18px; color: #fff;
-  display: flex; align-items: center; gap: 16px;
+  border-radius: var(--radius); padding: 14px 16px; color: #fff;
+  display: flex; align-items: center; gap: 12px;
   position: relative; overflow: hidden;
   box-shadow: 0 10px 26px rgba(255,140,66,0.35), 0 0 0 3px rgba(255,140,66,0.35), 0 0 26px rgba(255,140,66,0.5);
   animation: ledPulso 2.4s ease-in-out infinite;
@@ -110,16 +114,16 @@ input, textarea { font-family: inherit; }
   transform: translateX(-100%); animation: brillo 3.5s ease-in-out infinite;
 }
 @keyframes brillo { 0% { transform: translateX(-100%); } 60%, 100% { transform: translateX(100%); } }
-.progreso-emoji { font-size: 2.6rem; line-height: 1; position: relative; filter: drop-shadow(0 0 12px rgba(255,255,255,0.8)); }
+.progreso-emoji { font-size: 2.2rem; line-height: 1; position: relative; filter: drop-shadow(0 0 12px rgba(255,255,255,0.8)); flex-shrink: 0; }
 .progreso-emoji.festejo { animation: festejar .6s ease; }
 @keyframes festejar {
   0% { transform: scale(1) rotate(0); } 25% { transform: scale(1.4) rotate(-15deg); }
   50% { transform: scale(1.2) rotate(15deg); } 75% { transform: scale(1.4) rotate(-10deg); } 100% { transform: scale(1) rotate(0); }
 }
-.progreso-info { flex: 1; position: relative; }
-.progreso-info .grande { font-size: 1.6rem; font-weight: 900; line-height: 1; }
-.progreso-info .peq { font-size: 0.92rem; font-weight: 600; opacity: 0.95; margin-top: 4px; }
-.barra-progreso { margin-top: 8px; height: 10px; border-radius: 10px; background: rgba(255,255,255,0.35); overflow: hidden; }
+.progreso-info { flex: 1; position: relative; min-width: 0; }
+.progreso-info .grande { font-size: 1.35rem; font-weight: 900; line-height: 1; }
+.progreso-info .peq { font-size: 0.82rem; font-weight: 600; opacity: 0.95; margin-top: 3px; }
+.barra-progreso { margin-top: 6px; height: 8px; border-radius: 10px; background: rgba(255,255,255,0.35); overflow: hidden; }
 .barra-progreso > div {
   height: 100%; background: #fff; border-radius: 10px;
   transition: width .6s cubic-bezier(0.34,1.56,0.64,1);
@@ -132,42 +136,69 @@ input, textarea { font-family: inherit; }
 }
 @keyframes ola { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
 
-.avatares { display: flex; gap: 12px; overflow-x: auto; padding: 20px 18px 8px; scrollbar-width: none; }
-.avatares::-webkit-scrollbar { display: none; }
+/* Botón "Todos" pequeño al lado del contador */
+.btn-todos-mini {
+  flex-shrink: 0;
+  width: 46px; height: 46px; border-radius: 50%;
+  background: rgba(255,255,255,0.28);
+  border: 2px solid rgba(255,255,255,0.55);
+  color: #fff; font-size: 1.4rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .25s;
+  position: relative;
+}
+.btn-todos-mini.activo {
+  background: #fff; color: var(--accent);
+  box-shadow: 0 0 18px rgba(255,255,255,0.9);
+  transform: scale(1.05);
+}
+.btn-todos-mini:active { transform: scale(0.9); }
+
+/* =========================================================
+   AVATARES DE FAMILIA (los 5 caben siempre)
+   ========================================================= */
+.avatares {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  padding: 18px 14px 8px;
+  max-width: 560px; margin: 0 auto;
+}
 .avatar-btn {
-  flex: 0 0 auto; width: 92px;
-  display: flex; flex-direction: column; align-items: center; gap: 6px;
-  padding: 8px 4px 6px; border-radius: 22px;
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  padding: 6px 2px 4px; border-radius: 18px;
   background: transparent; border: 3px solid transparent;
   transition: all .25s; position: relative;
 }
 .avatar-btn .cara {
-  width: 68px; height: 68px; border-radius: 50%; overflow: hidden;
+  width: 100%; max-width: 56px; aspect-ratio: 1/1;
+  border-radius: 50%; overflow: hidden;
   position: relative; box-shadow: var(--shadow);
   transition: transform .25s cubic-bezier(0.34,1.56,0.64,1);
   background: var(--bg-card);
 }
 .avatar-btn .cara img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 50%; }
-.avatar-btn .nom { font-size: 0.78rem; font-weight: 900; color: var(--text-soft); transition: color .2s; letter-spacing: 0.2px; }
-.avatar-btn.activo { background: var(--bg-card); border-color: var(--accent); box-shadow: 0 0 24px rgba(255,140,66,0.5); }
+.avatar-btn .nom {
+  font-size: 0.7rem; font-weight: 900; color: var(--text-soft);
+  transition: color .2s; letter-spacing: 0.1px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: 100%; text-align: center;
+}
+.avatar-btn.activo { background: var(--bg-card); border-color: var(--accent); box-shadow: 0 0 20px rgba(255,140,66,0.5); }
 .avatar-btn.activo .cara { animation: saltito 1.4s ease-in-out infinite; }
 .avatar-btn.activo .nom { color: var(--text); }
-@keyframes saltito { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes saltito { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
 .avatar-btn:active .cara { transform: scale(0.85); }
-.avatar-btn .punto-led {
-  position: absolute; top: 6px; right: 12px;
-  width: 12px; height: 12px; border-radius: 50%;
-  background: var(--success); box-shadow: 0 0 10px var(--success);
-  animation: parpadeo 1.4s ease-in-out infinite;
-}
-@keyframes parpadeo { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
 
+/* =========================================================
+   LISTA
+   ========================================================= */
 .lista { padding: 8px 18px 20px; max-width: 560px; margin: 0 auto; }
-.grupo-miembro { margin-bottom: 24px; animation: aparecerGrupo .5s ease backwards; }
+.grupo-miembro { margin-bottom: 20px; animation: aparecerGrupo .5s ease backwards; }
 @keyframes aparecerGrupo { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
-.grupo-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; padding-left: 2px; }
+.grupo-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; padding-left: 2px; }
 .grupo-cara {
-  width: 60px; height: 60px; border-radius: 50%; overflow: hidden;
+  width: 44px; height: 44px; border-radius: 50%; overflow: hidden;
   position: relative; background: var(--bg-card); transition: transform .25s; flex-shrink: 0;
 }
 .grupo-cara img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 50%; }
@@ -180,14 +211,20 @@ input, textarea { font-family: inherit; }
   0%, 100% { opacity: 0.4; box-shadow: 0 0 10px var(--halo, var(--accent)); }
   50% { opacity: 0.9; box-shadow: 0 0 22px var(--halo, var(--accent)), 0 0 34px var(--halo, var(--accent)); }
 }
-.grupo-nombre { font-size: 1.25rem; font-weight: 900; flex: 1; }
-.grupo-rol { font-size: 0.72rem; font-weight: 700; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+.grupo-nombre { font-size: 1.1rem; font-weight: 900; flex: 1; }
+.grupo-rol { font-size: 0.68rem; font-weight: 700; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.4px; margin-top: 1px; }
+/* CONTADOR MÁS PEQUEÑO */
 .grupo-contador {
-  font-size: 0.88rem; font-weight: 900; color: var(--text-soft);
-  background: var(--bg-soft); padding: 6px 14px; border-radius: 20px;
-  transition: transform .2s; box-shadow: inset 0 0 0 2px rgba(255,255,255,0.35);
+  font-size: 0.72rem; font-weight: 900;
+  color: var(--text-soft); background: var(--bg-soft);
+  padding: 3px 9px; border-radius: 12px;
+  box-shadow: inset 0 0 0 1.5px rgba(255,255,255,0.35);
+  flex-shrink: 0;
 }
 
+/* =========================================================
+   ACTIVIDAD
+   ========================================================= */
 .actividad {
   display: flex; align-items: center; gap: 12px;
   background: var(--bg-card); border-radius: var(--radius-sm);
@@ -229,6 +266,9 @@ input, textarea { font-family: inherit; }
 @keyframes flotarSuave { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 .vacio .msg { font-size: 1.05rem; font-weight: 700; }
 
+/* =========================================================
+   NOTAS
+   ========================================================= */
 .notas { max-width: 560px; margin: 10px auto 20px; padding: 0 18px; }
 .notas-cabeza { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
 .notas-cabeza h2 { font-size: 1.3rem; margin: 0; font-weight: 900; }
@@ -269,6 +309,9 @@ input, textarea { font-family: inherit; }
 }
 .nota-del:active { transform: scale(0.85) rotate(15deg); }
 
+/* =========================================================
+   BOTÓN AGREGAR
+   ========================================================= */
 .btn-agregar {
   position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
@@ -283,6 +326,9 @@ input, textarea { font-family: inherit; }
 }
 .btn-agregar:active { transform: translateX(-50%) scale(0.92); }
 
+/* =========================================================
+   MODALES
+   ========================================================= */
 .modal-overlay {
   position: fixed; inset: 0; background: rgba(0,0,0,0.5);
   display: none; align-items: flex-end; justify-content: center;
@@ -299,7 +345,7 @@ input, textarea { font-family: inherit; }
 .modal h2 { margin: 0 0 18px; font-size: 1.5rem; font-weight: 900; text-align: center; }
 .paso { margin-bottom: 20px; }
 .paso label { display: block; font-size: 1rem; font-weight: 900; margin-bottom: 10px; color: var(--text); }
-.paso input[type=text], .paso input[type=time], .paso textarea {
+.paso input[type=text], .paso textarea {
   width: 100%; padding: 16px; font-size: 1.1rem; font-weight: 700;
   border-radius: 18px; background: var(--bg-card);
   border: 3px solid var(--border); color: var(--text); outline: none;
@@ -336,6 +382,88 @@ input, textarea { font-family: inherit; }
   box-shadow: 0 0 20px rgba(255,140,66,0.6);
 }
 
+/* =========================================================
+   🕐 RELOJ PARA NIÑOS
+   ========================================================= */
+.btn-abrir-reloj {
+  width: 100%;
+  background: var(--bg-card);
+  border: 3px solid var(--border);
+  border-radius: 18px;
+  padding: 16px;
+  font-size: 1.6rem; font-weight: 900;
+  color: var(--text);
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  transition: all .25s;
+}
+.btn-abrir-reloj:active {
+  transform: scale(0.97);
+  border-color: var(--accent);
+  box-shadow: 0 0 20px rgba(255,140,66,0.5);
+}
+.btn-abrir-reloj .emoji { font-size: 1.8rem; }
+
+/* Selector de reloj a pantalla dentro del modal */
+.reloj-caja { display: none; }
+body.modo-reloj .reloj-caja { display: block; }
+body.modo-reloj .paso-reloj-cerrado { display: none; }
+body.modo-reloj .modal-botones { display: none; }
+body.modo-reloj .paso:not(.paso-reloj),
+body.modo-reloj .modal h2 { display: none; }
+
+.reloj-titulo {
+  text-align: center; font-size: 1.3rem; font-weight: 900;
+  margin: 0 0 16px;
+}
+.reloj-display {
+  display: flex; align-items: center; justify-content: center;
+  gap: 6px; margin-bottom: 20px;
+}
+.reloj-grupo {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.reloj-flecha {
+  width: 60px; height: 52px; border-radius: 16px;
+  background: var(--bg-card); box-shadow: var(--shadow);
+  font-size: 1.6rem; font-weight: 900; color: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+.reloj-flecha:active {
+  transform: scale(0.85);
+  background: var(--accent); color: #fff;
+  box-shadow: 0 0 20px rgba(255,140,66,0.7);
+}
+.reloj-numero {
+  width: 90px; height: 90px; border-radius: 20px;
+  background: var(--bg-card); box-shadow: var(--shadow);
+  font-size: 3rem; font-weight: 900; color: var(--text);
+  display: flex; align-items: center; justify-content: center;
+  font-variant-numeric: tabular-nums;
+}
+.reloj-sep {
+  font-size: 3rem; font-weight: 900; color: var(--text-soft);
+  align-self: flex-start; margin-top: 52px;
+}
+.reloj-botones {
+  display: flex; gap: 12px; margin-top: 24px;
+}
+.btn-reloj-ok, .btn-reloj-cancel {
+  flex: 1; padding: 18px; border-radius: 20px;
+  font-weight: 900; font-size: 1.1rem;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  transition: transform .15s, box-shadow .2s;
+}
+.btn-reloj-ok {
+  background: linear-gradient(135deg, #34d058, #2fb84e);
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(52,208,88,0.4), 0 0 20px rgba(52,208,88,0.5);
+}
+.btn-reloj-cancel {
+  background: var(--bg-soft); color: var(--text);
+}
+.btn-reloj-ok:active, .btn-reloj-cancel:active { transform: scale(0.94); }
+
 .modal-botones { display: flex; gap: 12px; margin-top: 22px; }
 .btn-grande {
   flex: 1; padding: 18px; border-radius: 20px;
@@ -349,6 +477,9 @@ input, textarea { font-family: inherit; }
 .btn-secundario { background: var(--bg-soft); color: var(--text); }
 .btn-grande:active { transform: scale(0.94); }
 
+/* =========================================================
+   CONFETI
+   ========================================================= */
 .confeti, .confeti-linea { position: fixed; pointer-events: none; z-index: 999; }
 .confeti {
   font-size: 2rem;
@@ -378,11 +509,10 @@ input, textarea { font-family: inherit; }
   100% { transform: translateY(-220px) scale(0.5); opacity: 0; }
 }
 
-/* Estado de sincronización */
 .sync-status {
   position: fixed; top: 8px; right: 8px;
-  font-size: 0.75rem; font-weight: 800;
-  padding: 6px 12px; border-radius: 20px;
+  font-size: 0.72rem; font-weight: 800;
+  padding: 5px 10px; border-radius: 20px;
   background: var(--bg-card); color: var(--text-soft);
   box-shadow: var(--shadow); z-index: 50;
   transition: all .3s;
@@ -415,6 +545,7 @@ input, textarea { font-family: inherit; }
   <button class="btn-hoy-flotante" id="btnHoy">🌟 Ir a hoy</button>
 </div>
 
+<!-- PROGRESO con botón "Todos" pequeño al lado -->
 <div class="progreso">
   <div class="progreso-caja">
     <div class="progreso-emoji" id="progEmoji">🎯</div>
@@ -423,9 +554,11 @@ input, textarea { font-family: inherit; }
       <div class="peq" id="progPeq">Sin actividades por ahora</div>
       <div class="barra-progreso"><div id="progBarra" style="width:0%"></div></div>
     </div>
+    <button class="btn-todos-mini activo" id="btnTodos" title="Ver todos">👨‍👩‍👧‍👦</button>
   </div>
 </div>
 
+<!-- AVATARES: los 5 siempre visibles -->
 <div class="avatares" id="avatares"></div>
 
 <main class="lista" id="lista"></main>
@@ -440,25 +573,56 @@ input, textarea { font-family: inherit; }
 
 <button class="btn-agregar" id="btnAgregar">➕ Agregar actividad</button>
 
+<!-- MODAL ACTIVIDAD -->
 <div class="modal-overlay" id="modalActividad">
   <div class="modal">
     <h2>✨ Nueva actividad</h2>
+
     <div class="paso">
       <label>1. ¿Quién la va a hacer?</label>
       <div class="elegir-miembro" id="elegirMiembro"></div>
     </div>
+
     <div class="paso">
       <label>2. ¿Qué va a hacer?</label>
       <input type="text" id="inputTitulo" placeholder="Ej: Clase de natación" maxlength="50" />
     </div>
+
     <div class="paso">
       <label>3. ¿Qué días?</label>
       <div class="elegir-dias" id="elegirDias"></div>
     </div>
-    <div class="paso">
+
+    <div class="paso paso-reloj-cerrado">
       <label>4. ¿A qué hora empieza?</label>
-      <input type="time" id="inputHora" value="08:00" />
+      <button type="button" class="btn-abrir-reloj" id="btnAbrirReloj">
+        <span class="emoji">🕐</span>
+        <span id="textoHoraElegida">08:00</span>
+      </button>
     </div>
+
+    <!-- RELOJ INFANTIL (oculto hasta que se abre) -->
+    <div class="reloj-caja" id="relojCaja">
+      <div class="reloj-titulo">🕐 ¿A qué hora?</div>
+      <div class="reloj-display">
+        <div class="reloj-grupo">
+          <button type="button" class="reloj-flecha" data-sumar="hora" data-cantidad="1">▲</button>
+          <div class="reloj-numero" id="relojHH">08</div>
+          <button type="button" class="reloj-flecha" data-sumar="hora" data-cantidad="-1">▼</button>
+        </div>
+        <div class="reloj-sep">:</div>
+        <div class="reloj-grupo">
+          <button type="button" class="reloj-flecha" data-sumar="min" data-cantidad="5">▲</button>
+          <div class="reloj-numero" id="relojMM">00</div>
+          <button type="button" class="reloj-flecha" data-sumar="min" data-cantidad="-5">▼</button>
+        </div>
+      </div>
+      <div class="reloj-botones">
+        <button type="button" class="btn-reloj-cancel" id="btnCancelarReloj">❌ Cancelar</button>
+        <button type="button" class="btn-reloj-ok" id="btnEstablecerReloj">✅ Establecer</button>
+      </div>
+    </div>
+
     <div class="modal-botones">
       <button class="btn-grande btn-secundario" data-cerrar="modalActividad">Cancelar</button>
       <button class="btn-grande btn-primario" id="btnGuardarActividad">Guardar</button>
@@ -466,6 +630,7 @@ input, textarea { font-family: inherit; }
   </div>
 </div>
 
+<!-- MODAL NOTA -->
 <div class="modal-overlay" id="modalNota">
   <div class="modal">
     <h2>📝 Nueva nota</h2>
@@ -506,9 +671,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db  = getFirestore(app);
 
-// Ruta base en Firestore:
-// familias/nuestra-familia/actividades/{id}
-// familias/nuestra-familia/notas/{id}
 const FAM_ID   = 'nuestra-familia';
 const refActs  = collection(db, 'familias', FAM_ID, 'actividades');
 const refNotas = collection(db, 'familias', FAM_ID, 'notas');
@@ -535,15 +697,19 @@ const DIAS = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
 const DIAS_LARGO = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
 
 /* =========================================================
-   ESTADO (en memoria; Firestore es la fuente de verdad)
+   ESTADO
    ========================================================= */
 let actividades = [];
 let notas = [];
 let fecha = hoyISO();
-let filtro = 'todos';
+let filtro = 'todos';   // 👈 POR DEFECTO SIEMPRE TODOS
 let mA = { miembro: FAMILIA[0].id, dias: [new Date().getDay()] };
 let mN = { miembro: FAMILIA[0].id };
 let ultimoPct = 0;
+
+// Estado del reloj infantil
+let relojHH = 8;
+let relojMM = 0;
 
 /* =========================================================
    UTILIDADES
@@ -579,6 +745,7 @@ function setSync(estado, texto) {
   el.className = 'sync-status ' + estado;
   el.textContent = texto;
 }
+function pad2(n) { return String(n).padStart(2,'0'); }
 
 /* =========================================================
    FONDO ANIMADO
@@ -648,24 +815,24 @@ function animarFecha() {
 function renderAvatares() {
   const cont = document.getElementById('avatares');
   cont.innerHTML = '';
-  const todos = document.createElement('button');
-  todos.type = 'button';
-  todos.className = 'avatar-btn' + (filtro === 'todos' ? ' activo' : '');
-  todos.innerHTML = `
-    <div class="cara" style="background:linear-gradient(135deg,#ff8c42,#ff5c8a);display:flex;align-items:center;justify-content:center;font-size:2rem;">👨‍👩‍👧‍👦</div>
-    <div class="nom">Todos</div>
-    <span class="punto-led"></span>
-  `;
-  todos.onclick = () => { filtro = 'todos'; renderTodo(); };
-  cont.appendChild(todos);
   FAMILIA.forEach(m => {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'avatar-btn' + (filtro === m.id ? ' activo' : '');
     btn.innerHTML = `${caraHTML(m, 'cara')}<div class="nom">${m.nombre}</div>`;
-    btn.onclick = () => { filtro = m.id; renderTodo(); };
+    btn.onclick = () => {
+      // Si tocas el mismo, vuelve a "Todos"
+      filtro = (filtro === m.id) ? 'todos' : m.id;
+      renderTodo();
+    };
     cont.appendChild(btn);
   });
+
+  // Actualizar botón "Todos" mini
+  const btnTodos = document.getElementById('btnTodos');
+  if (btnTodos) {
+    btnTodos.classList.toggle('activo', filtro === 'todos');
+  }
 }
 
 function renderProgreso() {
@@ -887,7 +1054,11 @@ function lluviaFestejo() {
 function abrirModalActividad() {
   mA = { miembro: FAMILIA[0].id, dias: [dateDeISO(fecha).getDay()] };
   document.getElementById('inputTitulo').value = '';
-  document.getElementById('inputHora').value = '08:00';
+  // Hora por defecto: 08:00
+  relojHH = 8;
+  relojMM = 0;
+  actualizarTextoHora();
+  cerrarReloj(); // asegura modo normal
   renderModalMiembro();
   renderModalDias();
   document.getElementById('modalActividad').classList.add('abierto');
@@ -925,6 +1096,47 @@ function renderModalDias() {
   });
 }
 
+/* =========================================================
+   🕐 RELOJ INFANTIL
+   ========================================================= */
+function actualizarTextoHora() {
+  document.getElementById('textoHoraElegida').textContent =
+    `${pad2(relojHH)}:${pad2(relojMM)}`;
+}
+
+function pintarReloj() {
+  document.getElementById('relojHH').textContent = pad2(relojHH);
+  document.getElementById('relojMM').textContent = pad2(relojMM);
+  actualizarTextoHora();
+}
+
+function abrirReloj() {
+  // Estado inicial = lo que ya estaba elegido
+  pintarReloj();
+  document.body.classList.add('modo-reloj');
+  document.getElementById('relojCaja').style.display = 'block';
+}
+
+function cerrarReloj() {
+  document.body.classList.remove('modo-reloj');
+  document.getElementById('relojCaja').style.display = '';
+}
+
+function sumarHora(cantidad) {
+  relojHH = (relojHH + cantidad + 24) % 24;
+  pintarReloj();
+}
+function sumarMin(cantidad) {
+  let total = relojHH * 60 + relojMM + cantidad;
+  total = (total + 1440) % 1440;
+  relojHH = Math.floor(total / 60);
+  relojMM = total % 60;
+  pintarReloj();
+}
+
+/* =========================================================
+   GUARDAR ACTIVIDAD
+   ========================================================= */
 async function guardarActividad() {
   const titulo = document.getElementById('inputTitulo').value.trim();
   if (!titulo) { alert('Escribe qué hay que hacer 🙂'); return; }
@@ -935,7 +1147,7 @@ async function guardarActividad() {
     miembro: mA.miembro,
     titulo,
     dias: [...mA.dias],
-    horaInicio: document.getElementById('inputHora').value || '08:00',
+    horaInicio: `${pad2(relojHH)}:${pad2(relojMM)}`,
     horaFin: '',
     categoria: '',
     completadas: {},
@@ -1003,10 +1215,11 @@ async function guardarNota() {
 function cerrar(id) {
   const el = document.getElementById(id);
   if (el) el.classList.remove('abierto');
+  cerrarReloj();
 }
 
 /* =========================================================
-   SINCRONIZACIÓN EN TIEMPO REAL
+   SINCRONIZACIÓN
    ========================================================= */
 function iniciarSincronizacion() {
   onSnapshot(refActs, (snap) => {
@@ -1020,7 +1233,6 @@ function iniciarSincronizacion() {
 
   onSnapshot(refNotas, (snap) => {
     notas = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    // Ordenar: más nuevas primero
     notas.sort((a, b) => (b.creadoEn || 0) - (a.creadoEn || 0));
     renderNotas();
   }, (err) => {
@@ -1034,6 +1246,7 @@ function iniciarSincronizacion() {
 document.addEventListener('DOMContentLoaded', () => {
   generarFondo();
 
+  // Navegación de fecha
   document.getElementById('diaAnterior').addEventListener('click', () => {
     const d = dateDeISO(fecha); d.setDate(d.getDate() - 1);
     fecha = isoDeDate(d); animarFecha(); renderTodo();
@@ -1049,23 +1262,61 @@ document.addEventListener('DOMContentLoaded', () => {
     fecha = hoyISO(); animarFecha(); renderTodo();
   });
 
+  // Botón "Todos" mini
+  document.getElementById('btnTodos').addEventListener('click', () => {
+    filtro = 'todos';
+    renderTodo();
+  });
+
+  // Modal actividad
   document.getElementById('btnAgregar').addEventListener('click', abrirModalActividad);
   document.getElementById('btnGuardarActividad').addEventListener('click', guardarActividad);
+
+  // Reloj infantil
+  document.getElementById('btnAbrirReloj').addEventListener('click', abrirReloj);
+  document.getElementById('btnEstablecerReloj').addEventListener('click', () => {
+    cerrarReloj();
+  });
+  document.getElementById('btnCancelarReloj').addEventListener('click', () => {
+    // Restaura la hora previa (la que estaba antes de abrir)
+    // Como no la guardamos, simplemente cerramos
+    cerrarReloj();
+  });
+
+  document.querySelectorAll('[data-sumar]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const cantidad = parseInt(btn.dataset.cantidad, 10);
+      if (btn.dataset.sumar === 'hora') sumarHora(cantidad);
+      else sumarMin(cantidad);
+    });
+  });
+
+  // Modal nota
   document.getElementById('btnNuevaNota').addEventListener('click', abrirModalNota);
   document.getElementById('btnGuardarNota').addEventListener('click', guardarNota);
 
+  // Cerrar modales
   document.querySelectorAll('[data-cerrar]').forEach(b => {
     b.addEventListener('click', () => cerrar(b.dataset.cerrar));
   });
   document.querySelectorAll('.modal-overlay').forEach(ov => {
     ov.addEventListener('click', (e) => {
-      if (e.target === ov) ov.classList.remove('abierto');
+      if (e.target === ov) { ov.classList.remove('abierto'); cerrarReloj(); }
     });
   });
 
   renderTodo();
   iniciarSincronizacion();
 });
+</script>
+
+<!-- Registro del Service Worker para PWA -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    });
+  }
 </script>
 </body>
 </html>
