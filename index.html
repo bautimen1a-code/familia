@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#fff8f0" />
+<title>🏠 Nuestra Familia</title>
+<style>
+/* =========================================================
+   1. VARIABLES Y TEMA
+   ========================================================= */
+:root {
+  --bg: #fff8f0;
+  --bg-card: #ffffff;
+  --bg-soft: #fff1e0;
+  --text: #3a2a1a;
+  --text-soft: #9a8570;
+  --border: #f2e2cc;
+  --shadow: 0 6px 20px rgba(200, 150, 100, 0.13);
+  --accent: #ff8c42;
+  --accent-2: #ff5c8a;
+  --success: #34d058;
+  --danger: #ff5c5c;
+  --radius: 24px;
+  --radius-sm: 18px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1c1611;
+    --bg-card: #2a221b;
+    --bg-soft: #332a22;
+    --text: #fbf1e5;
+    --text-soft: #b8a794;
+    --border: #423628;
+    --shadow: 0 6px 20px rgba(0,0,0,0.4);
+    --accent: #ff9d5c;
+    --accent-2: #ff6fa5;
+  }
+}
+
+/* =========================================================
+   2. BASE
+   ========================================================= */
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding-bottom: 130px;
+  font-size: 17px;
+  overflow-x: hidden;
+  transition: background .3s, color .3s;
+  position: relative;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+input, textarea { font-family: inherit; }
+
+/* =========================================================
+   3. FONDO ANIMADO
+   ========================================================= */
+.fondo-animado {
+  position: fixed; inset: 0; z-index: -1;
+  overflow: hidden; pointer-events: none;
+}
+.burbuja {
+  position: absolute; border-radius: 50%;
+  opacity: 0.12;
+  animation: flotar linear infinite;
+}
+@keyframes flotar {
+  0%   { transform: translateY(110vh) scale(0.6); opacity: 0; }
+  10%  { opacity: 0.16; }
+  90%  { opacity: 0.16; }
+  100% { transform: translateY(-15vh) scale(1.2); opacity: 0; }
+}
+
+/* =========================================================
+   4. ENCABEZADO
+   ========================================================= */
+.top { padding: 18px 18px 8px; text-align: center; }
+.top h1 {
+  margin: 0; font-size: 1.9rem; font-weight: 900;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
+.top h1 .casita {
+  display: inline-block;
+  animation: brincar 2.4s ease-in-out infinite;
+}
+@keyframes brincar {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  25% { transform: translateY(-6px) rotate(-6deg); }
+  50% { transform: translateY(0) rotate(0); }
+  75% { transform: translateY(-4px) rotate(6deg); }
+}
+.top .sub {
+  color: var(--text-soft); font-size: 1rem;
+  margin-top: 4px; font-weight: 700;
+}
+
+/* =========================================================
+   5. FECHA
+   ========================================================= */
+.fecha-barra {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; margin: 16px auto 0;
+  max-width: 480px; padding: 0 18px;
+}
+.fecha-flecha {
+  width: 54px; height: 54px; border-radius: 50%;
+  background: var(--bg-card); box-shadow: var(--shadow);
+  font-size: 1.6rem;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--accent); font-weight: 900;
+  transition: transform .15s, background .2s, box-shadow .2s;
+}
+.fecha-flecha:active {
+  transform: scale(0.85);
+  background: var(--accent); color: #fff;
+  box-shadow: 0 0 20px rgba(255,140,66,0.6);
+}
+.fecha-centro {
+  flex: 1; background: var(--bg-card);
+  box-shadow: var(--shadow);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  display: flex; flex-direction: column; align-items: center;
+  position: relative; overflow: hidden;
+  transition: transform .2s;
+}
+.fecha-centro.animando { animation: cambioFecha .4s ease; }
+@keyframes cambioFecha {
+  0% { transform: scale(1); }
+  40% { transform: scale(0.94); }
+  100% { transform: scale(1); }
+}
+.fecha-centro .dia {
+  font-size: 1.15rem; font-weight: 900;
+  color: var(--text); text-transform: capitalize;
+}
+.fecha-centro .num {
+  font-size: 0.82rem; font-weight: 700; color: var(--text-soft);
+}
+.fecha-centro input[type=date] {
+  position: absolute; inset: 0;
+  opacity: 0; width: 100%; height: 100%; cursor: pointer;
+}
+
+.btn-hoy-flotante {
+  display: none; margin: 10px auto 0;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff; font-weight: 800; font-size: 1rem;
+  padding: 12px 24px; border-radius: 30px;
+  box-shadow: 0 6px 18px rgba(255,140,66,0.45);
+  animation: latidoHoy 1.6s ease-in-out infinite;
+}
+.btn-hoy-flotante.visible { display: inline-block; }
+@keyframes latidoHoy {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+
+/* =========================================================
+   6. PROGRESO
+   ========================================================= */
+.progreso {
+  margin: 18px auto 0; max-width: 480px; padding: 0 18px;
+}
+.progreso-caja {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border-radius: var(--radius);
+  padding: 18px; color: #fff;
+  display: flex; align-items: center; gap: 16px;
+  position: relative; overflow: hidden;
+  box-shadow:
+    0 10px 26px rgba(255,140,66,0.35),
+    0 0 0 3px rgba(255,140,66,0.35),
+    0 0 26px rgba(255,140,66,0.5);
+  animation: ledPulso 2.4s ease-in-out infinite;
+}
+@keyframes ledPulso {
+  0%, 100% {
+    box-shadow:
+      0 10px 26px rgba(255,140,66,0.35),
+      0 0 0 3px rgba(255,140,66,0.35),
+      0 0 22px rgba(255,140,66,0.45);
+  }
+  50% {
+    box-shadow:
+      0 10px 26px rgba(255,140,66,0.5),
+      0 0 0 4px rgba(255,140,66,0.5),
+      0 0 40px rgba(255,140,66,0.75);
+  }
+}
+.progreso-caja::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.28) 50%, transparent 70%);
+  transform: translateX(-100%);
+  animation: brillo 3.5s ease-in-out infinite;
+}
+@keyframes brillo {
+  0% { transform: translateX(-100%); }
+  60%, 100% { transform: translateX(100%); }
+}
+.progreso-emoji {
+  font-size: 2.6rem; line-height: 1; position: relative;
+  filter: drop-shadow(0 0 12px rgba(255,255,255,0.8));
+}
+.progreso-emoji.festejo { animation: festejar .6s ease; }
+@keyframes festejar {
+  0% { transform: scale(1) rotate(0); }
+  25% { transform: scale(1.4) rotate(-15deg); }
+  50% { transform: scale(1.2) rotate(15deg); }
+  75% { transform: scale(1.4) rotate(-10deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+.progreso-info { flex: 1; position: relative; }
+.progreso-info .grande { font-size: 1.6rem; font-weight: 900; line-height: 1; }
+.progreso-info .peq { font-size: 0.92rem; font-weight: 600; opacity: 0.95; margin-top: 4px; }
+.barra-progreso {
+  margin-top: 8px; height: 10px; border-radius: 10px;
+  background: rgba(255,255,255,0.35); overflow: hidden;
+}
+.barra-progreso > div {
+  height: 100%; background: #fff; border-radius: 10px;
+  transition: width .6s cubic-bezier(0.34,1.56,0.64,1);
+  position: relative;
+  box-shadow: 0 0 12px rgba(255,255,255,0.9);
+}
+.barra-progreso > div::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent);
+  animation: ola 1.8s linear infinite;
+}
+@keyframes ola {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}
+
+/* =========================================================
+   7. AVATARES
+   ========================================================= */
+.avatares {
+  display: flex; gap: 12px; overflow-x: auto;
+  padding: 20px 18px 8px; scrollbar-width: none;
+}
+.avatares::-webkit-scrollbar { display: none; }
+.avatar-btn {
+  flex: 0 0 auto;
+  width: 92px;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 8px 4px 6px;
+  border-radius: 22px;
+  background: transparent;
+  border: 3px solid transparent;
+  transition: all .25s;
+  position: relative;
+}
+.avatar-btn .cara {
+  width: 68px; height: 68px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  box-shadow: var(--shadow);
+  transition: transform .25s cubic-bezier(0.34,1.56,0.64,1);
+  background: var(--bg-card);
+}
+/* Imagen redonda directa, sin SVG ni clipPath */
+.avatar-btn .cara img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 50%;
+}
+.avatar-btn .nom {
+  font-size: 0.78rem; font-weight: 900;
+  color: var(--text-soft);
+  transition: color .2s;
+  letter-spacing: 0.2px;
+}
+.avatar-btn.activo {
+  background: var(--bg-card);
+  border-color: var(--accent);
+  box-shadow: 0 0 24px rgba(255,140,66,0.5);
+}
+.avatar-btn.activo .cara {
+  animation: saltito 1.4s ease-in-out infinite;
+}
+.avatar-btn.activo .nom { color: var(--text); }
+@keyframes saltito {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+.avatar-btn:active .cara { transform: scale(0.85); }
+
+.avatar-btn .punto-led {
+  position: absolute;
+  top: 6px; right: 12px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 10px var(--success);
+  animation: parpadeo 1.4s ease-in-out infinite;
+}
+@keyframes parpadeo {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+/* =========================================================
+   8. LISTA
+   ========================================================= */
+.lista { padding: 8px 18px 20px; max-width: 560px; margin: 0 auto; }
+.grupo-miembro {
+  margin-bottom: 24px;
+  animation: aparecerGrupo .5s ease backwards;
+}
+@keyframes aparecerGrupo {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.grupo-head {
+  display: flex; align-items: center;
+  gap: 12px; margin-bottom: 12px; padding-left: 2px;
+}
+.grupo-cara {
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  background: var(--bg-card);
+  transition: transform .25s;
+  flex-shrink: 0;
+}
+.grupo-cara img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 50%;
+}
+.grupo-cara::after {
+  content: ''; position: absolute; inset: -3px;
+  border-radius: 50%;
+  border: 3px solid var(--halo, var(--accent));
+  opacity: 0.6;
+  animation: ledGrupo 2.2s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes ledGrupo {
+  0%, 100% { opacity: 0.4; box-shadow: 0 0 10px var(--halo, var(--accent)); }
+  50% { opacity: 0.9; box-shadow: 0 0 22px var(--halo, var(--accent)), 0 0 34px var(--halo, var(--accent)); }
+}
+.grupo-nombre {
+  font-size: 1.25rem; font-weight: 900; flex: 1;
+}
+.grupo-rol {
+  font-size: 0.72rem; font-weight: 700;
+  color: var(--text-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+.grupo-contador {
+  font-size: 0.88rem; font-weight: 900;
+  color: var(--text-soft); background: var(--bg-soft);
+  padding: 6px 14px; border-radius: 20px;
+  transition: transform .2s;
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,0.35);
+}
+
+/* =========================================================
+   9. TARJETA ACTIVIDAD
+   ========================================================= */
+.actividad {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+  padding: 14px; margin-bottom: 12px;
+  box-shadow: var(--shadow);
+  transition: background .25s, transform .15s, box-shadow .25s;
+  animation: aparecerAct .55s cubic-bezier(0.34,1.56,0.64,1) backwards;
+}
+@keyframes aparecerAct {
+  from { opacity: 0; transform: translateY(18px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.actividad.completada {
+  background: linear-gradient(135deg, #e8fbe9, #d7f7da);
+}
+@media (prefers-color-scheme: dark) {
+  .actividad.completada { background: linear-gradient(135deg, #1c3a25, #143019); }
+}
+.actividad.completada .titulo { text-decoration: line-through; opacity: .55; }
+
+.check-grande {
+  flex-shrink: 0;
+  width: 56px; height: 56px; border-radius: 50%;
+  border: 4px solid var(--border);
+  background: var(--bg-soft);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.7rem; color: transparent;
+  transition: all .25s;
+  position: relative;
+}
+.check-grande.on {
+  background: var(--success);
+  border-color: var(--success);
+  color: #fff;
+  transform: scale(1.08);
+  animation: checkPop .45s ease;
+  box-shadow: 0 0 18px var(--success), 0 0 34px rgba(52,208,88,0.6);
+}
+@keyframes checkPop {
+  0% { transform: scale(0.7); }
+  60% { transform: scale(1.2); }
+  100% { transform: scale(1.08); }
+}
+.check-grande.bloqueado { opacity: .35; }
+.check-grande:active { transform: scale(0.88); }
+
+.actividad-info { flex: 1; min-width: 0; }
+.actividad-info .titulo {
+  font-size: 1.1rem; font-weight: 800;
+  line-height: 1.2; word-wrap: break-word;
+}
+.actividad-info .hora {
+  font-size: 0.9rem; font-weight: 700;
+  color: var(--text-soft); margin-top: 4px;
+  display: flex; align-items: center; gap: 4px;
+}
+
+.btn-borrar {
+  flex-shrink: 0;
+  width: 48px; height: 48px; border-radius: 50%;
+  background: rgba(255,92,92,0.14);
+  color: var(--danger); font-size: 1.3rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform .15s, background .2s, box-shadow .2s;
+}
+.btn-borrar:active {
+  transform: scale(0.85) rotate(15deg);
+  background: rgba(255,92,92,0.3);
+  box-shadow: 0 0 16px rgba(255,92,92,0.7);
+}
+
+.vacio {
+  text-align: center; padding: 50px 20px;
+  color: var(--text-soft);
+}
+.vacio .em {
+  font-size: 4rem; display: block; margin-bottom: 12px;
+  animation: flotarSuave 3s ease-in-out infinite;
+}
+@keyframes flotarSuave {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.vacio .msg { font-size: 1.05rem; font-weight: 700; }
+
+/* =========================================================
+   10. NOTAS
+   ========================================================= */
+.notas { max-width: 560px; margin: 10px auto 20px; padding: 0 18px; }
+.notas-cabeza {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.notas-cabeza h2 { font-size: 1.3rem; margin: 0; font-weight: 900; }
+.btn-nota {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff; font-weight: 800; font-size: 0.95rem;
+  padding: 10px 18px; border-radius: 20px;
+  box-shadow: 0 0 16px rgba(255,140,66,0.5);
+  transition: transform .15s, box-shadow .2s;
+}
+.btn-nota:active {
+  transform: scale(0.9);
+  box-shadow: 0 0 24px rgba(255,140,66,0.8);
+}
+
+.nota {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px; margin-bottom: 10px;
+  box-shadow: var(--shadow);
+  animation: aparecerAct .45s ease backwards;
+  transition: transform .15s;
+}
+.nota.hecha { opacity: 0.65; }
+.nota.hecha .nota-txt { text-decoration: line-through; }
+.nota-check {
+  flex-shrink: 0;
+  width: 44px; height: 44px; border-radius: 14px;
+  background: var(--bg-soft);
+  border: 3px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; color: transparent;
+  transition: all .25s;
+}
+.nota-check.on {
+  background: var(--success);
+  border-color: var(--success);
+  color: #fff;
+  animation: checkPop .45s ease;
+  box-shadow: 0 0 14px var(--success), 0 0 26px rgba(52,208,88,0.5);
+}
+.nota-check:active { transform: scale(0.88); }
+.nota-txt { flex: 1; font-weight: 700; font-size: 1rem; word-wrap: break-word; }
+.nota-quien { font-size: 0.78rem; font-weight: 700; color: var(--text-soft); margin-top: 3px; }
+.nota-del {
+  flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(255,92,92,0.12); color: var(--danger); font-size: 1.1rem;
+  transition: transform .15s;
+}
+.nota-del:active { transform: scale(0.85) rotate(15deg); }
+
+/* =========================================================
+   11. BOTÓN AGREGAR
+   ========================================================= */
+.btn-agregar {
+  position: fixed; bottom: 22px; left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff; font-weight: 900; font-size: 1.15rem;
+  padding: 18px 34px; border-radius: 40px;
+  display: flex; align-items: center; gap: 8px;
+  z-index: 40;
+  animation: respirarLED 2.6s ease-in-out infinite;
+}
+@keyframes respirarLED {
+  0%, 100% {
+    transform: translateX(-50%) scale(1);
+    box-shadow:
+      0 10px 30px rgba(255,140,66,0.55),
+      0 0 0 4px rgba(255,140,66,0.35),
+      0 0 26px rgba(255,140,66,0.6);
+  }
+  50% {
+    transform: translateX(-50%) scale(1.04);
+    box-shadow:
+      0 14px 38px rgba(255,140,66,0.7),
+      0 0 0 6px rgba(255,140,66,0.55),
+      0 0 48px rgba(255,140,66,0.9);
+  }
+}
+.btn-agregar:active { transform: translateX(-50%) scale(0.92); }
+
+/* =========================================================
+   12. MODALES
+   ========================================================= */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: none; align-items: flex-end; justify-content: center;
+  z-index: 100; backdrop-filter: blur(4px);
+}
+.modal-overlay.abierto { display: flex; }
+.modal {
+  background: var(--bg); width: 100%; max-width: 520px;
+  border-radius: 28px 28px 0 0;
+  padding: 22px 20px 28px;
+  max-height: 92vh; overflow-y: auto;
+  animation: subir .3s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes subir {
+  from { transform: translateY(60px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.modal h2 {
+  margin: 0 0 18px; font-size: 1.5rem; font-weight: 900;
+  text-align: center;
+}
+.paso { margin-bottom: 20px; }
+.paso label {
+  display: block; font-size: 1rem; font-weight: 900;
+  margin-bottom: 10px; color: var(--text);
+}
+.paso input[type=text],
+.paso input[type=time],
+.paso textarea {
+  width: 100%; padding: 16px;
+  font-size: 1.1rem; font-weight: 700;
+  border-radius: 18px;
+  background: var(--bg-card);
+  border: 3px solid var(--border);
+  color: var(--text); outline: none;
+  transition: border .2s, box-shadow .2s;
+}
+.paso input:focus, .paso textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 18px rgba(255,140,66,0.4);
+}
+.paso textarea { resize: none; min-height: 70px; }
+
+.elegir-miembro {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+.emiembro {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 10px 4px;
+  border-radius: 18px;
+  border: 3px solid transparent;
+  background: var(--bg-card);
+  transition: all .25s;
+}
+.emiembro .cara {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--bg-soft);
+  transition: transform .25s;
+  box-shadow: var(--shadow);
+}
+.emiembro .cara img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 50%;
+}
+.emiembro .nom {
+  font-size: 0.72rem; font-weight: 900;
+  color: var(--text-soft);
+}
+.emiembro.activo {
+  border-color: var(--accent);
+  background: var(--bg-soft);
+  box-shadow: 0 0 20px rgba(255,140,66,0.5);
+}
+.emiembro.activo .cara { transform: scale(1.1); }
+.emiembro.activo .nom { color: var(--text); }
+
+.elegir-dias {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+}
+.edia {
+  padding: 14px 0; border-radius: 16px;
+  background: var(--bg-card);
+  border: 3px solid var(--border);
+  font-weight: 900; font-size: 1rem;
+  color: var(--text-soft);
+  transition: all .25s;
+}
+.edia.activo {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border-color: var(--accent);
+  color: #fff;
+  box-shadow: 0 0 20px rgba(255,140,66,0.6);
+}
+
+.modal-botones { display: flex; gap: 12px; margin-top: 22px; }
+.btn-grande {
+  flex: 1; padding: 18px; border-radius: 20px;
+  font-weight: 900; font-size: 1.1rem; text-align: center;
+  transition: transform .15s, box-shadow .2s;
+}
+.btn-primario {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(255,140,66,0.4), 0 0 20px rgba(255,140,66,0.5);
+}
+.btn-secundario { background: var(--bg-soft); color: var(--text); }
+.btn-grande:active { transform: scale(0.94); }
+
+/* =========================================================
+   13. CONFETI (festejo lento)
+   ========================================================= */
+.confeti, .confeti-linea {
+  position: fixed; pointer-events: none; z-index: 999;
+}
+.confeti {
+  font-size: 2rem;
+  animation: caerConfeti 3.2s cubic-bezier(0.15,0.6,0.4,1) forwards;
+  filter: drop-shadow(0 0 8px rgba(255,255,255,0.7));
+}
+@keyframes caerConfeti {
+  0% { transform: translateY(-10vh) rotate(0deg) scale(0.6); opacity: 0; }
+  10% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { transform: translateY(90vh) rotate(720deg) scale(1.1); opacity: 0; }
+}
+.confeti-linea {
+  width: 8px; height: 14px; border-radius: 3px;
+  animation: caerLinea 3.6s linear forwards;
+}
+@keyframes caerLinea {
+  0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+  85% { opacity: 0.8; }
+  100% { transform: translateY(95vh) rotate(900deg); opacity: 0.2; }
+}
+.festejo-emoji {
+  position: fixed; font-size: 2.5rem;
+  pointer-events: none; z-index: 998;
+  animation: saltando 3.4s ease-out forwards;
+  filter: drop-shadow(0 0 10px rgba(255,255,255,0.8));
+}
+@keyframes saltando {
+  0% { transform: translateY(0) scale(0); opacity: 0; }
+  15% { transform: translateY(-40px) scale(1.3); opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translateY(-220px) scale(0.5); opacity: 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="fondo-animado" id="fondoAnimado"></div>
+
+<div class="top">
+  <h1><span class="casita">🏠</span> Nuestra Familia</h1>
+  <div class="sub" id="saludo">¡Hola! ¿Qué toca hoy?</div>
+</div>
+
+<div class="fecha-barra">
+  <button class="fecha-flecha" id="diaAnterior">‹</button>
+  <div class="fecha-centro" id="fechaCentro">
+    <div class="dia" id="fechaDia">—</div>
+    <div class="num" id="fechaNum">—</div>
+    <input type="date" id="inputFecha" />
+  </div>
+  <button class="fecha-flecha" id="diaSiguiente">›</button>
+</div>
+
+<div style="text-align:center;">
+  <button class="btn-hoy-flotante" id="btnHoy">🌟 Ir a hoy</button>
+</div>
+
+<div class="progreso">
+  <div class="progreso-caja">
+    <div class="progreso-emoji" id="progEmoji">🎯</div>
+    <div class="progreso-info">
+      <div class="grande" id="progGrande">0 de 0</div>
+      <div class="peq" id="progPeq">Sin actividades por ahora</div>
+      <div class="barra-progreso"><div id="progBarra" style="width:0%"></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="avatares" id="avatares"></div>
+
+<main class="lista" id="lista"></main>
+
+<section class="notas">
+  <div class="notas-cabeza">
+    <h2>📝 Cosas para hacer</h2>
+    <button class="btn-nota" id="btnNuevaNota">+ Nota</button>
+  </div>
+  <div id="listaNotas"></div>
+</section>
+
+<button class="btn-agregar" id="btnAgregar">➕ Agregar actividad</button>
+
+<!-- MODAL ACTIVIDAD -->
+<div class="modal-overlay" id="modalActividad">
+  <div class="modal">
+    <h2>✨ Nueva actividad</h2>
+
+    <div class="paso">
+      <label>1. ¿Quién la va a hacer?</label>
+      <div class="elegir-miembro" id="elegirMiembro"></div>
+    </div>
+
+    <div class="paso">
+      <label>2. ¿Qué va a hacer?</label>
+      <input type="text" id="inputTitulo" placeholder="Ej: Clase de natación" maxlength="50" />
+    </div>
+
+    <div class="paso">
+      <label>3. ¿Qué días?</label>
+      <div class="elegir-dias" id="elegirDias"></div>
+    </div>
+
+    <div class="paso">
+      <label>4. ¿A qué hora empieza?</label>
+      <input type="time" id="inputHora" value="08:00" />
+    </div>
+
+    <div class="modal-botones">
+      <button class="btn-grande btn-secundario" data-cerrar="modalActividad">Cancelar</button>
+      <button class="btn-grande btn-primario" id="btnGuardarActividad">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL NOTA -->
+<div class="modal-overlay" id="modalNota">
+  <div class="modal">
+    <h2>📝 Nueva nota</h2>
+
+    <div class="paso">
+      <label>¿Quién la escribe?</label>
+      <div class="elegir-miembro" id="elegirMiembroNota"></div>
+    </div>
+
+    <div class="paso">
+      <label>¿Qué hay que hacer?</label>
+      <textarea id="inputNotaTexto" placeholder="Ej: Comprar leche" maxlength="120"></textarea>
+    </div>
+
+    <div class="modal-botones">
+      <button class="btn-grande btn-secundario" data-cerrar="modalNota">Cancelar</button>
+      <button class="btn-grande btn-primario" id="btnGuardarNota">Agregar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   AVATARES — usan TUS imágenes
+   ========================================================= */
+const AVATARES = {
+  edwin:    'avatar_papa.png',
+  sara:     'avatar_mama.png',
+  meredith: 'avatar_hija_mayor.png',
+  sheyla:   'avatar_hija_mediana.png',
+  magdiel:  'avatar_hijo_menor.png',
+};
+
+/* =========================================================
+   DATOS FIJOS
+   ========================================================= */
+const FAMILIA = [
+  { id: 'edwin',    nombre: 'Edwin',    rol: 'Papá · Militar',           color: '#4f9cf9', img: AVATARES.edwin },
+  { id: 'sara',     nombre: 'Sara',     rol: 'Mamá · Enfermera',         color: '#ff6fa5', img: AVATARES.sara },
+  { id: 'meredith', nombre: 'Meredith', rol: 'Estudiante · Baile',       color: '#b667ff', img: AVATARES.meredith },
+  { id: 'sheyla',   nombre: 'Sheyla',   rol: 'Vóley · Gimnasia',         color: '#2fd18a', img: AVATARES.sheyla },
+  { id: 'magdiel',  nombre: 'Magdiel',  rol: 'Kinder · Fútbol · Básquet',color: '#ffab2e', img: AVATARES.magdiel },
+];
+const DIAS = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+const DIAS_LARGO = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+const LS_ACT = 'familia_act_v5';
+const LS_NOT = 'familia_not_v5';
+
+/* =========================================================
+   ESTADO
+   ========================================================= */
+let actividades = cargar(LS_ACT, []);
+let notas = cargar(LS_NOT, []);
+let fecha = hoyISO();
+let filtro = 'todos';
+let mA = { miembro: FAMILIA[0].id, dias: [new Date().getDay()] };
+let mN = { miembro: FAMILIA[0].id };
+let ultimoPct = 0;
+
+/* =========================================================
+   UTILIDADES
+   ========================================================= */
+function hoyISO() { return isoDeDate(new Date()); }
+function isoDeDate(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const dd = String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${dd}`;
+}
+function dateDeISO(iso) {
+  const [y,m,d] = iso.split('-').map(Number);
+  return new Date(y, m-1, d);
+}
+function diaSemana(iso) { return dateDeISO(iso).getDay(); }
+function esHoy(iso) { return iso === hoyISO(); }
+function esFuturo(iso) { return iso > hoyISO(); }
+function nombreMes(m) {
+  return ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'][m];
+}
+function infoMiembro(id) { return FAMILIA.find(x => x.id === id) || FAMILIA[0]; }
+function cargar(k, def) {
+  try {
+    const r = localStorage.getItem(k);
+    if (!r) return def;
+    const parsed = JSON.parse(r);
+    return Array.isArray(parsed) ? parsed : def;
+  } catch(e) { return def; }
+}
+function guardar(k, v) {
+  try { localStorage.setItem(k, JSON.stringify(v)); }
+  catch(e) { console.warn('No se pudo guardar', e); }
+}
+function esc(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function caraHTML(m, clase) {
+  return `<div class="${clase}"><img src="${m.img}" alt="${m.nombre}" /></div>`;
+}
+
+/* =========================================================
+   FONDO ANIMADO
+   ========================================================= */
+function generarFondo() {
+  const cont = document.getElementById('fondoAnimado');
+  const colores = ['#ff8c42','#ff5c8a','#4f9cf9','#b667ff','#2fd18a','#ffab2e'];
+  for (let i = 0; i < 12; i++) {
+    const b = document.createElement('div');
+    b.className = 'burbuja';
+    const size = 40 + Math.random() * 120;
+    b.style.width = size + 'px';
+    b.style.height = size + 'px';
+    b.style.left = Math.random() * 100 + 'vw';
+    b.style.background = colores[Math.floor(Math.random()*colores.length)];
+    b.style.animationDuration = (14 + Math.random() * 16) + 's';
+    b.style.animationDelay = (Math.random() * 12) + 's';
+    cont.appendChild(b);
+  }
+}
+
+/* =========================================================
+   DATOS
+   ========================================================= */
+function actsDeFecha(iso) {
+  const d = diaSemana(iso);
+  return actividades.filter(a => Array.isArray(a.dias) && a.dias.includes(d));
+}
+function completada(act, iso) {
+  return !!(act.completadas && act.completadas[iso]);
+}
+function setCompletada(act, iso, val) {
+  if (!act.completadas) act.completadas = {};
+  if (val) act.completadas[iso] = true;
+  else delete act.completadas[iso];
+}
+
+/* =========================================================
+   RENDER
+   ========================================================= */
+function renderTodo() {
+  renderFecha();
+  renderAvatares();
+  renderProgreso();
+  renderLista();
+  renderNotas();
+  guardar(LS_ACT, actividades);
+  guardar(LS_NOT, notas);
+}
+
+function renderFecha() {
+  const d = dateDeISO(fecha);
+  document.getElementById('fechaDia').textContent = DIAS_LARGO[d.getDay()];
+  document.getElementById('fechaNum').textContent = `${d.getDate()} de ${nombreMes(d.getMonth())}`;
+  document.getElementById('inputFecha').value = fecha;
+  document.getElementById('btnHoy').classList.toggle('visible', !esHoy(fecha));
+
+  const hora = new Date().getHours();
+  let saludo = '¡Hola! ¿Qué toca hoy?';
+  if (!esHoy(fecha)) saludo = 'Estás viendo otro día 👀';
+  else if (hora < 12) saludo = '¡Buenos días! ☀️';
+  else if (hora < 19) saludo = '¡Buenas tardes! 🌤️';
+  else saludo = '¡Buenas noches! 🌙';
+  document.getElementById('saludo').textContent = saludo;
+}
+
+function animarFecha() {
+  const c = document.getElementById('fechaCentro');
+  c.classList.remove('animando');
+  void c.offsetWidth;
+  c.classList.add('animando');
+}
+
+function renderAvatares() {
+  const cont = document.getElementById('avatares');
+  cont.innerHTML = '';
+
+  const todos = document.createElement('button');
+  todos.type = 'button';
+  todos.className = 'avatar-btn' + (filtro === 'todos' ? ' activo' : '');
+  todos.innerHTML = `
+    <div class="cara" style="background:linear-gradient(135deg,#ff8c42,#ff5c8a);display:flex;align-items:center;justify-content:center;font-size:2rem;">👨‍👩‍👧‍👦</div>
+    <div class="nom">Todos</div>
+    <span class="punto-led"></span>
+  `;
+  todos.onclick = () => { filtro = 'todos'; renderTodo(); };
+  cont.appendChild(todos);
+
+  FAMILIA.forEach(m => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'avatar-btn' + (filtro === m.id ? ' activo' : '');
+    btn.innerHTML = `
+      ${caraHTML(m, 'cara')}
+      <div class="nom">${m.nombre}</div>
+    `;
+    btn.onclick = () => { filtro = m.id; renderTodo(); };
+    cont.appendChild(btn);
+  });
+}
+
+function renderProgreso() {
+  let acts = actsDeFecha(fecha);
+  if (filtro !== 'todos') acts = acts.filter(a => a.miembro === filtro);
+
+  const total = acts.length;
+  const hechas = acts.filter(a => completada(a, fecha)).length;
+  const pct = total === 0 ? 0 : Math.round((hechas / total) * 100);
+
+  document.getElementById('progGrande').textContent = `${hechas} de ${total}`;
+
+  let emoji = '🎯';
+  let msg = total === 0 ? 'Sin actividades por ahora' : '¡Vamos!';
+  if (total > 0 && pct === 100) { emoji = '🏆'; msg = '¡Todo listo, felicidades!'; }
+  else if (pct >= 50) { emoji = '💪'; msg = '¡Ya casi terminas!'; }
+  else if (pct > 0) { emoji = '🌟'; msg = '¡Buen comienzo!'; }
+
+  const emojiEl = document.getElementById('progEmoji');
+  emojiEl.textContent = emoji;
+  document.getElementById('progPeq').textContent = msg;
+  document.getElementById('progBarra').style.width = pct + '%';
+
+  if (pct === 100 && total > 0 && ultimoPct !== 100) {
+    emojiEl.classList.remove('festejo');
+    void emojiEl.offsetWidth;
+    emojiEl.classList.add('festejo');
+    lluviaFestejo();
+  }
+  ultimoPct = pct;
+}
+
+function renderLista() {
+  const cont = document.getElementById('lista');
+  cont.innerHTML = '';
+
+  let acts = actsDeFecha(fecha);
+  if (filtro !== 'todos') acts = acts.filter(a => a.miembro === filtro);
+
+  const miembrosAMostrar = filtro === 'todos'
+    ? FAMILIA
+    : FAMILIA.filter(m => m.id === filtro);
+
+  let algo = false;
+  let delayIndex = 0;
+  miembrosAMostrar.forEach(m => {
+    const suyas = acts.filter(a => a.miembro === m.id)
+      .sort((a, b) => (a.horaInicio || '').localeCompare(b.horaInicio || ''));
+    if (suyas.length === 0) return;
+    algo = true;
+
+    const grupo = document.createElement('div');
+    grupo.className = 'grupo-miembro';
+    grupo.style.animationDelay = (delayIndex * 0.08) + 's';
+
+    const hechas = suyas.filter(a => completada(a, fecha)).length;
+
+    grupo.innerHTML = `
+      <div class="grupo-head">
+        <div class="grupo-cara" style="--halo:${m.color}">
+          <img src="${m.img}" alt="${m.nombre}" />
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div class="grupo-nombre">${m.nombre}</div>
+          <div class="grupo-rol">${m.rol}</div>
+        </div>
+        <div class="grupo-contador">${hechas}/${suyas.length}</div>
+      </div>
+    `;
+    suyas.forEach((a, i) => {
+      const el = renderActividad(a, m);
+      el.style.animationDelay = (delayIndex * 0.08 + i * 0.06) + 's';
+      grupo.appendChild(el);
+    });
+    cont.appendChild(grupo);
+    delayIndex++;
+  });
+
+  if (!algo) {
+    const mensaje = filtro === 'todos'
+      ? 'No hay actividades este día. ¡Toca el botón de abajo para agregar una!'
+      : `${infoMiembro(filtro).nombre} no tiene actividades este día.`;
+    cont.innerHTML = `
+      <div class="vacio">
+        <span class="em">🌤️</span>
+        <div class="msg">${mensaje}</div>
+      </div>
+    `;
+  }
+}
+
+function renderActividad(act, miembro) {
+  const done = completada(act, fecha);
+  const bloq = esFuturo(fecha) && !done;
+
+  const div = document.createElement('div');
+  div.className = 'actividad' + (done ? ' completada' : '');
+
+  const hora = act.horaFin ? `${act.horaInicio}–${act.horaFin}` : (act.horaInicio || '08:00');
+
+  div.innerHTML = `
+    <button type="button" class="check-grande ${done ? 'on' : ''} ${bloq ? 'bloqueado' : ''}" data-check>✓</button>
+    <div class="actividad-info">
+      <div class="titulo">${esc(act.titulo)}</div>
+      <div class="hora">⏰ ${hora}</div>
+    </div>
+    <button type="button" class="btn-borrar" data-borrar>🗑️</button>
+  `;
+
+  div.querySelector('[data-check]').onclick = (e) => {
+    e.stopPropagation();
+    if (bloq) {
+      alert('Todavía no puedes marcar esto. ¡Es para otro día!');
+      return;
+    }
+    setCompletada(act, fecha, !done);
+    guardar(LS_ACT, actividades);
+    if (!done) confetiEnElemento(e.currentTarget);
+    renderTodo();
+  };
+
+  div.querySelector('[data-borrar]').onclick = (e) => {
+    e.stopPropagation();
+    if (confirm(`¿Borrar "${act.titulo}"?`)) {
+      actividades = actividades.filter(x => x.id !== act.id);
+      guardar(LS_ACT, actividades);
+      renderTodo();
+    }
+  };
+
+  return div;
+}
+
+function renderNotas() {
+  const cont = document.getElementById('listaNotas');
+  cont.innerHTML = '';
+  if (notas.length === 0) {
+    cont.innerHTML = `<div class="vacio" style="padding:20px;"><span class="em" style="font-size:2.5rem;">📭</span><div class="msg">Sin notas todavía</div></div>`;
+    return;
+  }
+  notas.forEach((n, i) => {
+    const m = infoMiembro(n.autor);
+    const div = document.createElement('div');
+    div.className = 'nota' + (n.hecha ? ' hecha' : '');
+    div.style.animationDelay = (i * 0.05) + 's';
+    // Solo nombre, sin rol
+    div.innerHTML = `
+      <button type="button" class="nota-check ${n.hecha ? 'on' : ''}" data-check>✓</button>
+      <div class="nota-txt">
+        ${esc(n.texto)}
+        <div class="nota-quien">${m.nombre}</div>
+      </div>
+      <button type="button" class="nota-del" data-del>🗑️</button>
+    `;
+    div.querySelector('[data-check]').onclick = (e) => {
+      n.hecha = !n.hecha;
+      if (n.hecha) confetiEnElemento(e.currentTarget);
+      guardar(LS_NOT, notas);
+      renderNotas();
+    };
+    div.querySelector('[data-del]').onclick = () => {
+      if (confirm('¿Borrar esta nota?')) {
+        notas = notas.filter(x => x.id !== n.id);
+        guardar(LS_NOT, notas);
+        renderNotas();
+      }
+    };
+    cont.appendChild(div);
+  });
+}
+
+/* =========================================================
+   FESTEJOS (solo visual, sin audio)
+   ========================================================= */
+function confetiEnElemento(el) {
+  const rect = el.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  const emojis = ['🎉','⭐','✨','🎊','💖','🌟','🎈'];
+  for (let i = 0; i < 12; i++) {
+    const c = document.createElement('div');
+    c.className = 'confeti';
+    c.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    c.style.left = (cx - 20 + (Math.random() - 0.5) * 200) + 'px';
+    c.style.top = cy + 'px';
+    c.style.animationDelay = (Math.random() * 0.3) + 's';
+    c.style.fontSize = (1.2 + Math.random() * 1.2) + 'rem';
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 3600);
+  }
+}
+
+function lluviaFestejo() {
+  const emojis = ['🎉','🏆','🌟','🎊','💖','🎈','✨'];
+  const colores = ['#ff8c42','#ff5c8a','#4f9cf9','#b667ff','#2fd18a','#ffab2e'];
+  for (let i = 0; i < 14; i++) {
+    const e = document.createElement('div');
+    e.className = 'festejo-emoji';
+    e.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    e.style.left = (10 + Math.random() * 80) + 'vw';
+    e.style.top = (40 + Math.random() * 30) + 'vh';
+    e.style.animationDelay = (Math.random() * 0.6) + 's';
+    document.body.appendChild(e);
+    setTimeout(() => e.remove(), 4200);
+  }
+  for (let i = 0; i < 36; i++) {
+    const l = document.createElement('div');
+    l.className = 'confeti-linea';
+    l.style.left = Math.random() * 100 + 'vw';
+    l.style.background = colores[Math.floor(Math.random()*colores.length)];
+    l.style.animationDelay = (Math.random() * 0.8) + 's';
+    document.body.appendChild(l);
+    setTimeout(() => l.remove(), 4600);
+  }
+}
+
+/* =========================================================
+   MODAL ACTIVIDAD
+   ========================================================= */
+function abrirModalActividad() {
+  mA = { miembro: FAMILIA[0].id, dias: [dateDeISO(fecha).getDay()] };
+  document.getElementById('inputTitulo').value = '';
+  document.getElementById('inputHora').value = '08:00';
+  renderModalMiembro();
+  renderModalDias();
+  document.getElementById('modalActividad').classList.add('abierto');
+  setTimeout(() => document.getElementById('inputTitulo').focus(), 250);
+}
+
+function renderModalMiembro() {
+  const cont = document.getElementById('elegirMiembro');
+  cont.innerHTML = '';
+  FAMILIA.forEach(m => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'emiembro' + (mA.miembro === m.id ? ' activo' : '');
+    btn.innerHTML = `
+      ${caraHTML(m, 'cara')}
+      <div class="nom">${m.nombre}</div>
+    `;
+    btn.onclick = () => { mA.miembro = m.id; renderModalMiembro(); };
+    cont.appendChild(btn);
+  });
+}
+
+function renderModalDias() {
+  const cont = document.getElementById('elegirDias');
+  cont.innerHTML = '';
+  const orden = [1,2,3,4,5,6,0];
+  orden.forEach(d => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'edia' + (mA.dias.includes(d) ? ' activo' : '');
+    btn.textContent = DIAS[d];
+    btn.onclick = () => {
+      if (mA.dias.includes(d)) mA.dias = mA.dias.filter(x => x !== d);
+      else mA.dias.push(d);
+      renderModalDias();
+    };
+    cont.appendChild(btn);
+  });
+}
+
+function guardarActividad() {
+  const titulo = document.getElementById('inputTitulo').value.trim();
+  if (!titulo) { alert('Escribe qué hay que hacer 🙂'); return; }
+  if (mA.dias.length === 0) { alert('Elige al menos un día 📅'); return; }
+
+  const nueva = {
+    id: 'a_' + Date.now() + '_' + Math.random().toString(36).slice(2,6),
+    miembro: mA.miembro,
+    titulo: titulo,
+    dias: [...mA.dias],
+    horaInicio: document.getElementById('inputHora').value || '08:00',
+    horaFin: '',
+    categoria: '',
+    completadas: {},
+  };
+  actividades.push(nueva);
+  guardar(LS_ACT, actividades);
+  cerrar('modalActividad');
+  renderTodo();
+  confetiEnElemento(document.getElementById('btnAgregar'));
+}
+
+/* =========================================================
+   MODAL NOTA
+   ========================================================= */
+function abrirModalNota() {
+  mN.miembro = FAMILIA[0].id;
+  document.getElementById('inputNotaTexto').value = '';
+  renderModalMiembroNota();
+  document.getElementById('modalNota').classList.add('abierto');
+  setTimeout(() => document.getElementById('inputNotaTexto').focus(), 250);
+}
+
+function renderModalMiembroNota() {
+  const cont = document.getElementById('elegirMiembroNota');
+  cont.innerHTML = '';
+  FAMILIA.forEach(m => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'emiembro' + (mN.miembro === m.id ? ' activo' : '');
+    btn.innerHTML = `
+      ${caraHTML(m, 'cara')}
+      <div class="nom">${m.nombre}</div>
+    `;
+    btn.onclick = () => { mN.miembro = m.id; renderModalMiembroNota(); };
+    cont.appendChild(btn);
+  });
+}
+
+function guardarNota() {
+  const texto = document.getElementById('inputNotaTexto').value.trim();
+  if (!texto) { alert('Escribe algo en la nota ✍️'); return; }
+  notas.unshift({
+    id: 'n_' + Date.now(),
+    autor: mN.miembro,
+    texto: texto,
+    fecha: hoyISO(),
+    hecha: false,
+  });
+  guardar(LS_NOT, notas);
+  cerrar('modalNota');
+  renderNotas();
+}
+
+function cerrar(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.remove('abierto');
+}
+
+/* =========================================================
+   EVENTOS
+   ========================================================= */
+document.addEventListener('DOMContentLoaded', () => {
+  generarFondo();
+
+  document.getElementById('diaAnterior').addEventListener('click', () => {
+    const d = dateDeISO(fecha); d.setDate(d.getDate() - 1);
+    fecha = isoDeDate(d); animarFecha(); renderTodo();
+  });
+  document.getElementById('diaSiguiente').addEventListener('click', () => {
+    const d = dateDeISO(fecha); d.setDate(d.getDate() + 1);
+    fecha = isoDeDate(d); animarFecha(); renderTodo();
+  });
+  document.getElementById('inputFecha').addEventListener('change', (e) => {
+    if (e.target.value) { fecha = e.target.value; animarFecha(); renderTodo(); }
+  });
+  document.getElementById('btnHoy').addEventListener('click', () => {
+    fecha = hoyISO(); animarFecha(); renderTodo();
+  });
+
+  document.getElementById('btnAgregar').addEventListener('click', abrirModalActividad);
+  document.getElementById('btnGuardarActividad').addEventListener('click', guardarActividad);
+  document.getElementById('btnNuevaNota').addEventListener('click', abrirNota);
+  document.getElementById('btnGuardarNota').addEventListener('click', guardarNota);
+
+  document.querySelectorAll('[data-cerrar]').forEach(b => {
+    b.addEventListener('click', () => cerrar(b.dataset.cerrar));
+  });
+  document.querySelectorAll('.modal-overlay').forEach(ov => {
+    ov.addEventListener('click', (e) => {
+      if (e.target === ov) ov.classList.remove('abierto');
+    });
+  });
+
+  renderTodo();
+});
+
+function abrirNota() { abrirModalNota(); }
+
+
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyCsbh0nokeVBuOMrW8FDeDhpzSx9Kzxezo",
+  authDomain: "familia-efd0f.firebaseapp.com",
+  projectId: "familia-efd0f",
+  storageBucket: "familia-efd0f.firebasestorage.app",
+  messagingSenderId: "265083485059",
+  appId: "1:265083485059:web:131a92bcdbd5039a6054b6"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+
+
+
+
+
+</script>
+
+
+
+
+</body>
+</html>
